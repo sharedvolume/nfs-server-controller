@@ -1,0 +1,10 @@
+apiVersion: sharedvolume.io/v1alpha1
+kind: NfsServer
+metadata:
+  name: nfs-server-1
+  namespace: shared-volume-1
+spec:
+  storage:
+    capacity: 10Gi
+    storageClassName: standard # if you use persistentVolume, do not use this
+  
