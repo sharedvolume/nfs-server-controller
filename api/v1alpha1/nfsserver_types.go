@@ -34,17 +34,21 @@ type NfsServerSpec struct {
 	Replicas *int32      `json:"replicas,omitempty"`
 	Path     string      `json:"path,omitempty"`
 	Image    string      `json:"image,omitempty"`
+	Address  string      `json:"address,omitempty"`
 }
 
 type NfsServerStatus struct {
 	Ready   bool   `json:"ready"`
 	Phase   string `json:"phase,omitempty"`
 	Message string `json:"message,omitempty"`
-	Address string `json:"address,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:resource:shortName=nfs,scope=Namespaced
+// +kubebuilder:printcolumn:name="Ready",type=boolean,JSONPath=".status.ready",description="NFS Server Ready"
+// +kubebuilder:printcolumn:name="Address",type=string,JSONPath=".spec.address",description="NFS Server Address"
+// +kubebuilder:printcolumn:name="Capacity",type=string,JSONPath=".spec.storage.capacity",description="NFS Storage Capacity"
 
 // NfsServer is the Schema for the nfsservers API.
 type NfsServer struct {

@@ -11,10 +11,25 @@ spec:
     kind: NfsServer
     listKind: NfsServerList
     plural: nfsservers
+    shortNames:
+    - nfs
     singular: nfsserver
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - description: NFS Server Ready
+      jsonPath: .status.ready
+      name: Ready
+      type: boolean
+    - description: NFS Server Address
+      jsonPath: .spec.address
+      name: Address
+      type: string
+    - description: NFS Storage Capacity
+      jsonPath: .spec.storage.capacity
+      name: Capacity
+      type: string
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         description: NfsServer is the Schema for the nfsservers API.
@@ -38,6 +53,8 @@ spec:
             type: object
           spec:
             properties:
+              address:
+                type: string
               image:
                 type: string
               path:
@@ -61,8 +78,6 @@ spec:
             type: object
           status:
             properties:
-              address:
-                type: string
               message:
                 type: string
               phase:

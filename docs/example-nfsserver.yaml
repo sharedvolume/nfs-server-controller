@@ -4,6 +4,7 @@ metadata:
   name: nfs-server-1
   namespace: shared-volume
 spec:
+  address: nfs-server-1.shared-volume.svc.cluster.local # this is optional, default is nfs-server-1.shared-volume.svc.cluster.local
   storage:
     capacity: 10Gi
     storageClassName: standard # if you use persistentVolume, do not use this

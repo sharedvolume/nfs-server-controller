@@ -28,7 +28,6 @@ rules:
 - apiGroups:
   - apps
   resources:
-  - deployments
   - replicasets
   verbs:
   - create

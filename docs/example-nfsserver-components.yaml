@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfss-test-nfs
+  labels:
+    app: nfss-test-nfs
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nfs-server
+  template:
+    metadata:
+      labels:
+        app: nfs-server
+    spec:
+      containers:
+        - name: nfs-server
+          image: sharedvolume/nfs-server:3.22.0
+          # image: itsthenetwork/nfs-server-alpine:latest
+          securityContext:
+            privileged: true
+          env:
+            - name: SHARED_DIRECTORY
+              value: /exports
+          args:
+            - /exports
+          ports:
+            - name: nfs
+              containerPort: 2049
+            - name: mountd
+              containerPort: 20048
+            - name: rpcbind
+              containerPort: 111
+          volumeMounts:
+            - name: nfs-data
+              mountPath: /exports
+      volumes:
+        - name: nfs-data
+          persistentVolumeClaim:
+            claimName: nfss-test-nfs
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfss-test-nfs
+  labels:
+    app: nfss-test-nfs
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: standard  # Use the appropriate storage class for your environment
+  volumeMode: Filesystem  # Ensure this is set to Filesystem for NFS
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nfss-test-nfs
+spec:
+  clusterIP: None  # Headless service
+  selector:
+    app: nfss-test-nfs
+  ports:
+    - name: nfs
+      port: 2049
+      targetPort: 2049
+    - name: mountd
+      port: 20048
+      targetPort: 20048
+    - name: rpcbind
+      port: 111
+      targetPort: 111
+
