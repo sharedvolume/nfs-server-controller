@@ -1,4 +1,4 @@
-apiVersion: nfs.sharedvolume.io/v1alpha1
+apiVersion: sharedvolume.io/v1alpha1
 kind: NfsServer
 metadata:
   name: nfs-server-1

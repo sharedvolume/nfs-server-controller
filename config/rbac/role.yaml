@@ -38,7 +38,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - nfs.sharedvolume.io
+  - sharedvolume.io
   resources:
   - nfsservers
   verbs:
@@ -50,13 +50,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - nfs.sharedvolume.io
+  - sharedvolume.io
   resources:
   - nfsservers/finalizers
   verbs:
   - update
 - apiGroups:
-  - nfs.sharedvolume.io
+  - sharedvolume.io
   resources:
   - nfsservers/status
   verbs:

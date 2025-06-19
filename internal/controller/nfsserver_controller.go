@@ -41,9 +41,9 @@ type NfsServerReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-// +kubebuilder:rbac:groups=nfs.sharedvolume.io,resources=nfsservers,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=nfs.sharedvolume.io,resources=nfsservers/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=nfs.sharedvolume.io,resources=nfsservers/finalizers,verbs=update
+// +kubebuilder:rbac:groups=sharedvolume.io,resources=nfsservers,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=sharedvolume.io,resources=nfsservers/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=sharedvolume.io,resources=nfsservers/finalizers,verbs=update
 // +kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=apps,resources=replicasets,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=core,resources=persistentvolumeclaims,verbs=get;list;watch;create;update;patch;delete
