@@ -152,7 +152,7 @@ func (r *NfsServerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	nfsServer.Status.Message = msg
 
 	// 7. Address
-	address := fmt.Sprintf("%s.%s.svc.cluster.local", nfsServer.Name, nfsServer.Namespace)
+	address := fmt.Sprintf("%s.%s.svc", nfsServer.Name, nfsServer.Namespace)
 	if nfsServer.Spec.Address != address {
 		retry.RetryOnConflict(retry.DefaultRetry, func() error {
 			latest := &nfsv1alpha1.NfsServer{}
@@ -226,7 +226,7 @@ func makeNfsReplicaSet(nfsServer *nfsv1alpha1.NfsServer) *appsv1.ReplicaSet {
 	}
 	image := nfsServer.Spec.Image
 	if image == "" {
-		image = "sharedvolume/nfs-server:alpine-3.22.0"
+		image = "sharedvolume/nfs-server:alpine-3.22.0-1"
 	}
 	mountPath := nfsServer.Spec.Path
 	if mountPath == "" {
@@ -246,21 +246,42 @@ func makeNfsReplicaSet(nfsServer *nfsv1alpha1.NfsServer) *appsv1.ReplicaSet {
 				ObjectMeta: metav1.ObjectMeta{Labels: labels},
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{{
-						Name:            "nfs-server",
-						Image:           image,
-						SecurityContext: &corev1.SecurityContext{Privileged: pointerBool(true)},
-						Env:             []corev1.EnvVar{{Name: "SHARED_DIRECTORY", Value: mountPath}},
-						Args:            []string{mountPath},
-						Ports:           []corev1.ContainerPort{{Name: "nfs", ContainerPort: 2049}, {Name: "mountd", ContainerPort: 20048}, {Name: "rpcbind", ContainerPort: 111}},
-						VolumeMounts:    []corev1.VolumeMount{{Name: "nfs-data", MountPath: mountPath}},
+						Name:  "nfs-server",
+						Image: image,
+						SecurityContext: &corev1.SecurityContext{
+							Privileged: pointerBool(true),
+							Capabilities: &corev1.Capabilities{
+								Add: []corev1.Capability{"SYS_ADMIN", "SYS_MODULE"},
+							},
+						},
+						Env: []corev1.EnvVar{
+							{Name: "SHARED_DIRECTORY", Value: mountPath},
+							{Name: "PERMITTED", Value: "*"},
+							{Name: "SYNC", Value: "true"},
+							{Name: "NFS_DISABLE_VERSION_3", Value: "false"},
+						},
+						Args:         []string{mountPath},
+						Ports:        []corev1.ContainerPort{{Name: "nfs", ContainerPort: 2049}, {Name: "mountd", ContainerPort: 20048}, {Name: "rpcbind", ContainerPort: 111}},
+						VolumeMounts: []corev1.VolumeMount{{Name: "nfs-data", MountPath: mountPath}},
 						ReadinessProbe: &corev1.Probe{
 							ProbeHandler: corev1.ProbeHandler{
 								Exec: &corev1.ExecAction{
-									Command: []string{"sh", "-c", "showmount -e localhost"},
+									Command: []string{"sh", "-c", "sleep 5 && showmount -e localhost"},
 								},
 							},
-							InitialDelaySeconds: 5,
-							PeriodSeconds:       5,
+							InitialDelaySeconds: 20,
+							PeriodSeconds:       15,
+							TimeoutSeconds:      10,
+							FailureThreshold:    5,
+						},
+						LivenessProbe: &corev1.Probe{
+							ProbeHandler: corev1.ProbeHandler{
+								Exec: &corev1.ExecAction{
+									Command: []string{"sh", "-c", "pgrep rpc.mountd && showmount -e localhost >/dev/null 2>&1"},
+								},
+							},
+							InitialDelaySeconds: 30,
+							PeriodSeconds:       30,
 						},
 					}},
 					Volumes: []corev1.Volume{{
