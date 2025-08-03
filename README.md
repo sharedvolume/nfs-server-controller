@@ -180,7 +180,14 @@ spec:
 
 ### Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on:
+
+- Code of conduct
+- Development setup
+- Pull request process
+- Testing requirements
+
+For detailed development information, including how this project was built with Kubebuilder, see our [Development Guide](docs/development.md).
 
 1. Fork the repository
 2. Create a feature branch
