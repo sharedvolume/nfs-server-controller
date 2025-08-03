@@ -1,15 +1,78 @@
+# Basic NFS Server Example
+# This creates an NFS server with 10Gi of storage using the default storage class
 apiVersion: sharedvolume.io/v1alpha1
 kind: NfsServer
 metadata:
-  name: nfs-server-1
-  namespace: shared-volume
+  name: basic-nfs-server
+  namespace: default
 spec:
-  address: nfs-server-1.shared-volume.svc.cluster.local # this is optional, default is nfs-server-1.shared-volume.svc.cluster.local
   storage:
-    capacity: 10Gi
-    storageClassName: standard # if you use persistentVolume, do not use this
-    persistentVolume: nfs-pv-1 # if you use storageClass, do not use this
-  replicas: 1 # this is optional, default is 2
-  path: /nfs-server-path-1 # this is optional, default is /nfs
-  image: sharedvolume/nfs-server:3.22.0 # this is optional, default is sharedvolume/nfs-server:3.22.0
-  
+    capacity: "10Gi"
+    storageClassName: "standard"  # Use your cluster's default storage class
+  replicas: 2
+  path: "/shared"
+
+---
+
+# High-Performance NFS Server Example
+# This creates an NFS server optimized for performance
+apiVersion: sharedvolume.io/v1alpha1
+kind: NfsServer
+metadata:
+  name: high-performance-nfs
+  namespace: production
+spec:
+  storage:
+    capacity: "100Gi"
+    storageClassName: "fast-ssd"  # Use SSD storage class
+  replicas: 3
+  path: "/fast-storage"
+
+---
+
+# Pre-existing PV Example
+# This creates an NFS server using a pre-existing PersistentVolume
+apiVersion: sharedvolume.io/v1alpha1
+kind: NfsServer
+metadata:
+  name: existing-pv-nfs
+  namespace: default
+spec:
+  storage:
+    capacity: "50Gi"
+    persistentVolume: "my-existing-pv"  # Reference to existing PV
+  replicas: 1
+  path: "/data"
+
+---
+
+# Single Replica NFS Server Example
+# This creates a single-instance NFS server for development/testing
+apiVersion: sharedvolume.io/v1alpha1
+kind: NfsServer
+metadata:
+  name: dev-nfs-server
+  namespace: development
+spec:
+  storage:
+    capacity: "5Gi"
+    storageClassName: "standard"
+  replicas: 1
+  path: "/dev-data"
+
+---
+
+# Custom Image NFS Server Example
+# This creates an NFS server using a custom container image
+apiVersion: sharedvolume.io/v1alpha1
+kind: NfsServer
+metadata:
+  name: custom-nfs-server
+  namespace: default
+spec:
+  storage:
+    capacity: "20Gi"
+    storageClassName: "standard"
+  replicas: 2
+  path: "/custom"
+  image: "sharedvolume/nfs-server:custom-tag"

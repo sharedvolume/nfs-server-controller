@@ -1,11 +1,11 @@
 /*
-Copyright 2025.
+Copyright 2025 SharedVolume.
 
-Licensed under the Apache License, Version 2.0 (the "License");
+Licensed under the MIT License (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    https://opensource.org/licenses/MIT
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -51,7 +51,12 @@ var _ = Describe("NfsServer Controller", func() {
 						Name:      resourceName,
 						Namespace: "default",
 					},
-					// TODO(user): Specify other spec details if needed.
+					Spec: nfsv1alpha1.NfsServerSpec{
+						Storage: nfsv1alpha1.StorageSpec{
+							Capacity:         "1Gi",
+							StorageClassName: "standard",
+						},
+					},
 				}
 				Expect(k8sClient.Create(ctx, resource)).To(Succeed())
 			}
