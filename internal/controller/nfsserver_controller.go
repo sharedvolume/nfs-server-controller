@@ -226,7 +226,7 @@ func makeNfsReplicaSet(nfsServer *nfsv1alpha1.NfsServer) *appsv1.ReplicaSet {
 	}
 	image := nfsServer.Spec.Image
 	if image == "" {
-		image = "sharedvolume/nfs-server:alpine-3.22.0-1"
+		image = "sharedvolume/nfs-server:0.0.3-alpine-3.22.0"
 	}
 	mountPath := nfsServer.Spec.Path
 	if mountPath == "" {
