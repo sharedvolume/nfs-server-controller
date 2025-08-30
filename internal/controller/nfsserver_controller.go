@@ -1,8 +1,8 @@
 /*
-Copyright 2025.
+Copyright 2025 SharedVolume.
 
 Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file exeptn compliance with the License.
+you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
     http://www.apache.org/licenses/LICENSE-2.0
@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/intstr"
@@ -226,7 +227,10 @@ func makeNfsReplicaSet(nfsServer *nfsv1alpha1.NfsServer) *appsv1.ReplicaSet {
 	}
 	image := nfsServer.Spec.Image
 	if image == "" {
-		image = "sharedvolume/nfs-server:0.0.3-alpine-3.22.0"
+		image = os.Getenv("NFS_SERVER_IMAGE")
+		if image == "" {
+			image = "sharedvolume/nfs-server:0.0.3-alpine-3.22.0"
+		}
 	}
 	mountPath := nfsServer.Spec.Path
 	if mountPath == "" {

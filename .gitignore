@@ -1,35 +1,96 @@
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
 # Binaries for programs and plugins
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
+bin/
+!bin/.gitkeep
 
 # Test binary, built with `go test -c`
 *.test
 
-# Code coverage profiles and other test artifacts
+# Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+cover.out
 coverage.*
 *.coverprofile
 profile.cov
 
 # Dependency directories (remove the comment below to include it)
-# vendor/
+vendor/
 
 # Go workspace file
 go.work
 go.work.sum
 
-# env file
+# Environment files
 .env
+.env.local
+.env.*.local
 
-# Editor/IDE
-# .idea/
-# .vscode/
+# IDE specific files
+.vscode/
+bin/
+.idea/
+*.swp
+*.swo
+*~
 
-.vscode
-.idea
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Kubernetes
+*.log
+kubeconfig
+
+# Helm
+charts/*/charts/
+charts/*/requirements.lock
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Build artifacts
+dist/
+build/
+output/
+
+# Coverage reports
+coverage.html
+coverage.xml
+
+# Profiling data
+*.prof
+
+# Debugging artifacts
+debug
+
+# Local development
+.devcontainer/
+.vagrant/
+
+# Docker
+Dockerfile.cross
+
+# Controller tools
+testbin/
+
+# Kubebuilder
+config/crd/bases/*.yaml.backup
+config/crd/patches/*.yaml.backup
+
+# Local testing
+kind-config.yaml
+e2e-test-cluster-*
+
+# Release artifacts
+release/
