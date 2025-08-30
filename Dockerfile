@@ -29,11 +29,11 @@ FROM gcr.io/distroless/static:nonroot
 
 LABEL maintainer="Bilgehan NAL bilgehan.nal@gmail.com"
 LABEL org.opencontainers.image.title="NFS Server Controller"
-LABEL org.opencontainers.image.description="A Kubernetes operator for managing NFS servers as custom resources"
+LABEL org.opencontainers.image.description="A professional-grade Kubernetes operator for managing NFS servers as custom resources"
 LABEL org.opencontainers.image.url="https://github.com/sharedvolume/nfs-server-controller"
 LABEL org.opencontainers.image.source="https://github.com/sharedvolume/nfs-server-controller"
 LABEL org.opencontainers.image.vendor="SharedVolume"
-LABEL org.opencontainers.image.licenses="MIT"
+LABEL org.opencontainers.image.licenses="Apache-2.0"
 
 WORKDIR /
 COPY --from=builder /workspace/manager .
